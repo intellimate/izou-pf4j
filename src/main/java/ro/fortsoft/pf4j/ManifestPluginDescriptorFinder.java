@@ -18,7 +18,6 @@ import ro.fortsoft.pf4j.util.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -42,7 +41,6 @@ public class ManifestPluginDescriptorFinder implements PluginDescriptorFinder {
 
 	@Override
 	public PluginDescriptor find(File pluginRepository) throws PluginException {
-    	// TODO it's ok with first classes directory? Another idea is to specify in PluginClasspath the folder.
 		String classes = pluginClasspath.getClassesDirectories().get(0);
         File manifestFile = new File(pluginRepository, classes + "/META-INF/MANIFEST.MF");
         log.debug("Lookup plugin descriptor in '{}'", manifestFile);
@@ -50,24 +48,11 @@ public class ManifestPluginDescriptorFinder implements PluginDescriptorFinder {
             throw new PluginException("Cannot find '" + manifestFile + "' file");
         }
 
-    	FileInputStream input = null;
-		try {
-			input = new FileInputStream(manifestFile);
-		} catch (FileNotFoundException e) {
-			// not happening
-		}
-
-    	Manifest manifest = null;
-        try {
+        Manifest manifest;
+        try (FileInputStream input = new FileInputStream(manifestFile)) {
             manifest = new Manifest(input);
         } catch (IOException e) {
             throw new PluginException(e.getMessage(), e);
-        } finally {
-            try {
-				input.close();
-			} catch (IOException e) {
-				throw new PluginException(e.getMessage(), e);
-			}
         }
 
         PluginDescriptor pluginDescriptor = new PluginDescriptor(pluginManager);
