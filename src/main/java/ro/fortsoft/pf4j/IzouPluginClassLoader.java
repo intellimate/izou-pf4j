@@ -120,7 +120,7 @@ public class IzouPluginClassLoader extends URLClassLoader {
         else
         //TODO resolve: what about the logging things
         if (//className.startsWith(PLUGIN_PACKAGE_PREFIX_LOG_SL4J) ||
-                className.startsWith(PLUGIN_PACKAGE_PREFIX_IZOU) ) {
+                className.startsWith(PLUGIN_PACKAGE_PREFIX_IZOU) && !className.startsWith(PLUGIN_PACKAGE_PREFIX_IZOU_SDK) ) {
                         //||
                 //className.startsWith(PLUGIN_PACKAGE_PREFIX_LOG_LOG4J)) {
             try {
